@@ -1,0 +1,877 @@
+﻿<UserControl x:Class="HISPharmacy.Pharmacy.IPSalesReturn"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"             
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+    xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+    xmlns:local="clr-namespace:HISPharmacy.GeneralModules"
+    xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns:behaviors="clr-namespace:HISPharmacy.GeneralModules"
+    mc:Ignorable="d" 
+    d:DesignHeight="800" d:DesignWidth="1000"
+     Loaded="Page_Loaded">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro.Resources;component/Icons.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+            <SolidColorBrush x:Key="brushWatermarkBackground" Color="White" />
+            <SolidColorBrush x:Key="brushWatermarkForeground" Color="LightSteelBlue" />
+            <SolidColorBrush x:Key="brushWatermarkBorder" Color="Indigo" />
+            <Thickness x:Key="ControlMargin">0 5 5 0</Thickness>
+            <Style x:Key="UnderlinedButtonStyle" TargetType="Button">
+                <Setter Property="FontWeight" Value="Normal"/>
+                <Setter Property="ContentTemplate">
+                    <Setter.Value>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding}" TextDecorations="Underline" Background="Transparent" Foreground="Blue" />
+                        </DataTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </ResourceDictionary>
+
+    </UserControl.Resources>
+    <ScrollViewer Margin="0,0,10,-24">
+
+        <Border BorderBrush="Gray"  BorderThickness="2" CornerRadius="10" Padding="2"
+                Background="White" Margin="5"  >
+            <Grid >
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <StackPanel Name="TitlePanel" Visibility="Visible" Grid.Row="0" >
+                    <Border BorderBrush="LightGray"  BorderThickness="0,0,0,1" CornerRadius="10" Padding="2"
+                Background="White" Margin="5"  >
+                        <Grid x:Name="grdTitle">
+                            <!--<Label Content="IP Sales" Grid.Row="0" Grid.Column="0"  HorizontalAlignment="Left" Background="LightGray"
+                        Style="{DynamicResource DescriptionHeaderStyle}" Margin="145,0,148,0"   FontWeight="Bold" />-->
+                            <Border CornerRadius="5" Margin="145,10,148,0" HorizontalAlignment="Left">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                        <GradientStop Color="#FF007ACC" Offset="0"/>
+                                        <GradientStop Color="#FF00BFFF" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                                <Label Content="IP Sales Return" FontWeight="Bold" FontSize="20" Padding="10,5" Foreground="White"/>
+                            </Border>
+
+                            <Button x:Name="btnNew" Content="+Add New" Background="#1EAAC7" Foreground="White" Height="22" Width="65" FontSize="12"
+                FontWeight="Bold"  Cursor="Hand" Margin="5,5,5,5" Grid.Row="0" Grid.Column="5" 
+              TabIndex="5" Click="btnNew_Click" HorizontalAlignment="Right"/>
+
+                        </Grid>
+                    </Border>
+                </StackPanel>
+
+                <StackPanel Name="GridPanel" Visibility="Visible" Grid.Row="1">
+                    <Grid Name="grdGrid">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <Label Content="From Dt." Margin="5" Grid.Row ="1" Grid.Column="0" Width="70" />
+                        <DatePicker Margin="5" Grid.Row ="1" Grid.Column="1" Name="dtpFrom" Width="150" 
+                          HorizontalAlignment="Left" VerticalAlignment="Top" />
+                        <Label Content="To Dt." Margin="5" Grid.Row ="1" Grid.Column="2" Width="50" HorizontalAlignment="Right" />
+                        <DatePicker Margin="5" Grid.Row ="1" Grid.Column="3" Name="dtpTo" Width="150" 
+                         HorizontalAlignment="Left" />
+                        <Label Content="Patient Name" Margin="5" Grid.Row ="1" Grid.Column="4" />
+                        <TextBox x:Name="txtFindBillNo" Grid.Row="1" Grid.Column="5" Margin="5,5,5,5" Width="150" HorizontalAlignment="Left"  ></TextBox>
+                        <Button x:Name="btnGo" Content="Go" Background="#1EAAC7" Foreground="White" Height="20" Width="50" FontSize="12"
+                FontWeight="Bold" BorderThickness="0" Cursor="Hand" Margin="5,5,5,5" Grid.Row="1" Grid.Column="6" 
+              TabIndex="5" Click="btnGo_Click" HorizontalAlignment="Left"></Button>
+
+                        <DataGrid x:Name="dgvIPSalesSalesFind" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="7" Height="550" Margin="5" 
+                      RenderOptions.ClearTypeHint="Enabled"  AlternationCount="2" IsReadOnly="True" ScrollViewer.CanContentScroll="True"
+                  TextOptions.TextFormattingMode="Display" HeadersVisibility="All" SelectionUnit="FullRow" ItemsSource="{Binding}" 
+                      AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False"   VerticalScrollBarVisibility="Auto"
+          HorizontalScrollBarVisibility="Auto"  >
+                            <DataGrid.Resources>
+                                <!-- Style for column headers -->
+                                <Style TargetType="DataGridColumnHeader">
+                                    <Setter Property="Background" Value="#1EAAC7"/>
+                                    <!-- Blue color, adjust as needed -->
+                                    <Setter Property="Foreground" Value="White"/>
+                                    <Setter Property="FontWeight" Value="Bold"/>
+                                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                    <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                    <Setter Property="BorderBrush" Value="Gray"/>
+                                    <Setter Property="BorderThickness" Value="0,0,1,1"/>
+                                </Style>
+                            </DataGrid.Resources>
+                            <DataGrid.Columns>
+
+                                <DataGridTextColumn Header="SlNo" Width="50" 
+                                    Binding="{Binding Slno}" />
+                                <DataGridTemplateColumn Header="View" Width="50">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button ToolTip="View" Click="btnView_Click" Name="btnView" Padding="0" 
+                           Width="30" Height="25" BorderThickness="0" Cursor="Hand" Content="View" Style="{StaticResource UnderlinedButtonStyle}">
+                                                <!--<Image Source="Controls\Images\view.png" Width="16" Height="16" Margin="0,0,5,0" />-->
+                                            </Button>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="Print" Width="50">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button ToolTip="Print" Click="btnPrint_Click" Name="btnPrint" Padding="0" Style="{StaticResource UnderlinedButtonStyle}"
+                           Width="30" Height="25" BorderThickness="0" Cursor="Hand" Content="Print">
+                                                <!--<Image Source="Controls\Images\printer.png" Width="16" Height="16" Margin="0,0,5,0"/>-->
+                                            </Button>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+
+                                <DataGridTextColumn Header="UHID" Width="100" 
+                                    Binding="{Binding UHID}"  />
+                                <DataGridTextColumn Header="IPDNo" Width="100"
+                                    Binding="{Binding IPDNo}" />
+                                <DataGridTextColumn Header="Name" Width="150"
+                                    Binding="{Binding Name}"/>
+                                <DataGridTextColumn Header="RetBillNo" Width="100" Foreground="Green"
+                                    Binding="{Binding RetBillNo}" />
+                                <DataGridTextColumn Header="Bill Date"  Width="100"
+                                    Binding="{Binding RetDate, StringFormat=dd-MMM-yyyy}"/>
+                                <DataGridTextColumn Header="BillNo" Width="100" Foreground="Green"
+                                    Binding="{Binding BillNo}" />
+                                <DataGridTextColumn Header="Total Amount"  Width="100" 
+                                    Binding="{Binding TotalCharges}" />
+                                <DataGridTextColumn Header="Paid"  Width="100"
+                                    Binding="{Binding Paid}" />
+                                <DataGridTextColumn Header="Discount"  Width="100"
+                                    Binding="{Binding Discount}" />
+                                <DataGridTextColumn Header="Due"  Width="100"
+                                    Binding="{Binding Due}" />
+                                <DataGridTextColumn Header="Created By" Width="100" 
+                                    Binding="{Binding CreateUserID}" />
+                                <DataGridTextColumn Header="Department"  Width="100"
+                                    Binding="{Binding DepartmentName}" />
+                                <DataGridTextColumn Header="Location"  Width="100"
+                                    Binding="{Binding LocationName}" />
+                            </DataGrid.Columns>
+
+                            <!--<DataGrid.Style>
+                    <Style BasedOn="{StaticResource MetroDataGrid}"
+                       TargetType="{x:Type DataGrid}">
+                        <Setter Property="AlternatingRowBackground"
+                            Value="{DynamicResource GrayBrush10}" />
+                    </Style>
+                </DataGrid.Style>
+                <DataGrid.RowStyle>
+                    <Style BasedOn="{StaticResource MetroDataGridRow}"
+                       TargetType="{x:Type DataGridRow}">
+
+                    </Style>
+                </DataGrid.RowStyle>-->
+                        </DataGrid>
+                    </Grid>
+
+                </StackPanel>
+                <ScrollViewer x:Name="scrollFormPanel"  VerticalScrollBarVisibility="Auto"  HorizontalScrollBarVisibility="Disabled" Grid.Row="2" Height="700">
+                    <StackPanel Name="FormPanel" Visibility="Collapsed" >
+
+                        <Grid Name="grdForm">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <StackPanel Orientation="Horizontal" Grid.Row="1">
+                                <Label Content="OPD-F1"   Foreground="Red" HorizontalAlignment="Left" />
+                                <Label Content="Others-F2"   Foreground="Red" HorizontalAlignment="Left" />
+                                <Label Content="Search-F6"  Foreground="Red" HorizontalAlignment="Left" />
+                                <Label Content="Generic-Shift+F1" Foreground="Red" HorizontalAlignment="Left" />
+                                <Label Content="Department Stock-Shift+F2" Foreground="Red" HorizontalAlignment="Left" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Grid.Row="2" >
+                                <Label Content="Sale Type"  HorizontalAlignment="Left" FontWeight="Bold" />
+                                <ComboBox  x:Name="cmbSaleType" Height="20" FontSize="12" TabIndex="1"
+                 HorizontalAlignment="Left" Width="80" SelectionChanged="cmbSaleType_SelectionChanged">
+                                    <ComboBoxItem Content="--Select--" ></ComboBoxItem>
+                                    <ComboBoxItem Content="Direct" ></ComboBoxItem>
+                                    <ComboBoxItem Content="Indent" ></ComboBoxItem>
+                                </ComboBox>
+                                <Label x:Name="lblUHIDPhone" Content="UHID/Phone No" HorizontalAlignment="Left" FontWeight="Bold" Visibility="Collapsed" />
+                                <TextBox x:Name="txtUHIDPhone" Width="150" HorizontalAlignment="Left" TabIndex="2" Visibility="Collapsed" />
+
+                                <Label x:Name="lblIndentNo1" Content="Indent No" HorizontalAlignment="Left" FontWeight="Bold" Visibility="Collapsed" />
+                                <TextBox x:Name="txtIndentPhone" Width="150" HorizontalAlignment="Left" TabIndex="2" Visibility="Collapsed" />
+
+                                <Button x:Name="btnFind" Content="Find" Background="#1EAAC7" Foreground="White" Height="20" Width="50" FontSize="12"
+                FontWeight="Bold" BorderThickness="0" Margin="5" TabIndex="3" Cursor="Hand" Click="btnFind_Click" HorizontalAlignment="Left"></Button>
+                            </StackPanel>
+
+                            <GroupBox Header="Patient Details" Name="grpPatDet" Grid.Row="3" 
+          FontWeight="Bold" Margin="5" Height="185">
+                                <Grid Margin="5">
+                                    <Grid.ColumnDefinitions>
+
+                                        <ColumnDefinition Width="120"/>
+
+                                        <ColumnDefinition Width="10"/>
+                                        <ColumnDefinition Width="200"/>
+
+                                        <ColumnDefinition Width="120"/>
+                                        <ColumnDefinition Width="10"/>
+                                        <ColumnDefinition Width="200"/>
+
+                                        <ColumnDefinition Width="120"/>
+                                        <ColumnDefinition Width="10"/>
+                                        <ColumnDefinition Width="200"/>
+                                    </Grid.ColumnDefinitions>
+
+
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <!-- Column 1 -->
+                                    <Label Grid.Row="0" Grid.Column="0" Content="UHID/IPDNo:" VerticalAlignment="Center"/>
+                                    <Label Grid.Row="0" Grid.Column="1" Content=":" VerticalAlignment="Center"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="2" Name="lblUHID" VerticalAlignment="Center"/>
+
+                                    <Label Grid.Row="1" Grid.Column="0" Content="Name:" VerticalAlignment="Center"/>
+                                    <Label Grid.Row="1" Grid.Column="1" Content=":" VerticalAlignment="Center"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="2" Name="NameLabel" VerticalAlignment="Center"/>
+
+                                    <Label Grid.Row="2" Grid.Column="0" Content="Age/Gender:" VerticalAlignment="Center"/>
+                                    <Label Grid.Row="2" Grid.Column="1" Content=":" VerticalAlignment="Center"/>
+                                    <TextBlock Grid.Row="2" Grid.Column="2" Name="AgeGenderLabel" VerticalAlignment="Center"/>
+
+                                    <Label Grid.Row="3" Grid.Column="0" Content="Guardian:" VerticalAlignment="Center"/>
+                                    <Label Grid.Row="3" Grid.Column="1" Content=":" VerticalAlignment="Center"/>
+                                    <TextBlock Grid.Row="3" Grid.Column="2" Name="GuardianLabel" VerticalAlignment="Center"/>
+
+                                    <Label Grid.Row="4" Grid.Column="0" Content="Phone No:" VerticalAlignment="Center"/>
+                                    <Label Grid.Row="4" Grid.Column="1" Content=":" VerticalAlignment="Center"/>
+                                    <TextBlock Grid.Row="4" Grid.Column="2" Name="PhoneLabel" VerticalAlignment="Center"/>
+
+                                    <Label Grid.Row="5" Grid.Column="0" Content="Address:" VerticalAlignment="Top"/>
+                                    <Label Grid.Row="5" Grid.Column="1" Content=":" VerticalAlignment="Top"/>
+                                    <TextBlock Grid.Row="5" Grid.Column="2" Name="AddressLabel" TextWrapping="Wrap"/>
+
+                                    <!-- Column 2 -->
+                                    <Label Grid.Row="0" Grid.Column="3" Content="DOA:" VerticalAlignment="Center"/>
+                                    <Label Grid.Row="0" Grid.Column="4" Content=":" VerticalAlignment="Center"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="5" Name="DOALabel" VerticalAlignment="Center"/>
+
+                                    <Label Grid.Row="1" Grid.Column="3" Content="Primary Dr:" VerticalAlignment="Center"/>
+                                    <Label Grid.Row="1" Grid.Column="4" Content=":" VerticalAlignment="Center"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="5" Name="PrimaryDrLabel" VerticalAlignment="Center"/>
+                                    <!--<TextBlock Grid.Row="1" Grid.Column="5" Name="PrimaryDrLabel" VerticalAlignment="Center"><Run Name="DoctorNameRun"/><Run Text=" "/><Run Name="DoctorIDRun"/> </TextBlock>-->
+
+
+
+                                    <Label Grid.Row="2" Grid.Column="3" Content="Admission Type:" VerticalAlignment="Center"/>
+                                    <Label Grid.Row="2" Grid.Column="4" Content=":" VerticalAlignment="Center"/>
+                                    <TextBlock Grid.Row="2" Grid.Column="5" Name="AdmissionLabel" VerticalAlignment="Center"/>
+
+                                    <Label Grid.Row="3" Grid.Column="3" Content="BedNo/RoomNo:" VerticalAlignment="Center"/>
+                                    <Label Grid.Row="3" Grid.Column="4" Content=":" VerticalAlignment="Center"/>
+                                    <TextBlock Grid.Row="3" Grid.Column="5" Name="BedRoomNoLabel" VerticalAlignment="Center"/>
+                                    <!--<TextBlock Grid.Row="1" Grid.Column="5" Name="BedRoomNoLabel" VerticalAlignment="Center"><Run Name="BedNameRun"/><Run Text=" "/><Run Name="BedIDRun"/></TextBlock>-->
+
+                                    <Label Grid.Row="4" Grid.Column="3" Content="Room Type:" VerticalAlignment="Center"/>
+                                    <Label Grid.Row="4" Grid.Column="4" Content=":" VerticalAlignment="Center"/>
+                                    <TextBlock Grid.Row="4" Grid.Column="5" Name="RoomTypeLabel" VerticalAlignment="Center"/>
+
+                                    <Label Grid.Row="5" Grid.Column="3" Content="Payer:" VerticalAlignment="Center"/>
+                                    <Label Grid.Row="5" Grid.Column="4" Content=":" VerticalAlignment="Center"/>
+                                    <TextBlock Grid.Row="5" Grid.Column="5" Name="PayerLabel" VerticalAlignment="Center"/>
+                                    <!--<TextBlock Grid.Row="1" Grid.Column="5" Name="PayerLabel" VerticalAlignment="Center"><Run Name="PayerNameRun"/><Run Text=" "/><Run Name="PayerIDRun"/></TextBlock>-->
+
+                                   
+
+                                    <TextBlock Name="DocIDLabel" Visibility="Collapsed"/>
+                                    <TextBlock Name="BedIDLabel" Visibility="Collapsed"/>
+                                    <TextBlock Name="OrgIDLabel" Visibility="Collapsed"/>
+                                </Grid>
+                            </GroupBox>
+
+                            <GroupBox Header="Item Details" Name="grpItemDet" Grid.Row="4" FontWeight="Bold" Margin="5" TabIndex="8">
+                                <Grid Name="ItemDet">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <StackPanel Orientation="Horizontal" Grid.Row="1">
+                                        <StackPanel Orientation="Vertical" Width="310">
+                                            <Label Content="Item Name"   HorizontalAlignment="Left" Width="100" />
+                                            <!--<ComboBox   x:Name="cmbItemName" Height="20" FontSize="12"  Width="300" TabIndex="1"
+                                      HorizontalAlignment="Left" IsDropDownOpen="True"   IsEditable="True" 
+                                      PreviewTextInput="cmbItemName_PreviewTextInput" IsTextSearchEnabled="True" StaysOpenOnEdit="True" 
+                                      SelectionChanged="cmbItemName_SelectionChanged" Loaded="cmbItemName_Loaded" >
+                                            <ComboBox.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <VirtualizingStackPanel />
+                                                </ItemsPanelTemplate>
+                                            </ComboBox.ItemsPanel>
+                                        </ComboBox>-->
+                                            <ComboBox x:Name="cmbItemName" Width="300" Height="25" FontSize="12" IsEditable="True" IsTextSearchEnabled="False"
+                                         StaysOpenOnEdit="True" KeyUp="cmbItemName_KeyUp"    SelectionChanged="cmbItemName_SelectionChanged" Loaded="cmbItemName_Loaded">
+                                                <ComboBox.ItemsPanel>
+                                                    <ItemsPanelTemplate>
+                                                        <VirtualizingStackPanel/>
+                                                    </ItemsPanelTemplate>
+                                                </ComboBox.ItemsPanel>
+                                            </ComboBox>
+                                            <!--ItemsSource="{Binding ItemCB.FilteredItems}" IsDropDownOpen="{Binding IsDropdownOpen}"
+                                       Text="{Binding ItemCB.SearchText, UpdateSourceTrigger=PropertyChanged}"
+                                         Text="{Binding  ElementName=cmbItemName, Path=Text, UpdateSourceTrigger=PropertyChanged}"-->
+                                        </StackPanel>
+                                        <StackPanel Orientation="Vertical" Width="150">
+                                            <Label Content="Batch No"  HorizontalAlignment="Left" Width="70" />
+                                            <ComboBox x:Name="cmbBatchNo" Height="20" FontSize="12"  Width="120"
+                                      TabIndex="1" HorizontalAlignment="Left" SelectionChanged="cmbBatchNo_SelectionChanged"  />
+                                        </StackPanel>
+                                        <!--<StackPanel Orientation="Vertical" Width="90">
+                                            <Label Content="B.Qty"  HorizontalAlignment="Left" Width="80" />
+                                            <TextBox Name="txtBQty" Height="20"  Width="80"    
+                             HorizontalAlignment="Left" IsTabStop="False" IsEnabled="False" ></TextBox>
+                                        </StackPanel>-->
+                                        <StackPanel Orientation="Vertical" Width="90">
+                                            <Label Content="T.Qty"  HorizontalAlignment="Left" Width="80" />
+                                            <TextBox Name="txtTQty" Height="20"   Width="80"    
+                             HorizontalAlignment="Left" IsTabStop="False" IsEnabled="False" ></TextBox>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Vertical" Width="130">
+                                            <Label Content="Exp.Dt"   HorizontalAlignment="Left" Width="70" />
+                                            <DatePicker Height="25" Name="dtpExpDt"  Width="120" Foreground="Black"
+                            HorizontalAlignment="Left" IsTabStop="False" IsEnabled="False" />
+                                        </StackPanel>
+                                        <StackPanel Orientation="Vertical" Width="90">
+                                            <Label Content="Return Qty"  HorizontalAlignment="Left" Width="60"  />
+                                            <TextBox Name="txtQty" Height="20" Width="80"
+                             HorizontalAlignment="Left" TabIndex="2" TextChanged="txtQty_TextChanged"  ></TextBox>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Vertical" Width="120">
+                                            <Label Content="MRP" HorizontalAlignment="Left" Width="80" />
+                                            <TextBox Name="txtMRP" Height="20" Width="110"
+                             HorizontalAlignment="Left" IsTabStop="False" IsEnabled="False" ></TextBox>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Vertical" Width="150" Visibility="Collapsed">
+                                            <Label Content="Tax Amount"   HorizontalAlignment="Right"  Width="80" />
+                                            <TextBox Name="txtTaxAmt"   Width="150"   Height="20"  
+                             HorizontalAlignment="Left" IsTabStop="False" IsEnabled="False" ></TextBox>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Vertical" Width="130">
+                                            <Label Content="Amount"    Width="60" HorizontalAlignment="Left"  />
+                                            <TextBox Name="txtAmount"    Width="120"   Height="20" 
+                             HorizontalAlignment="Left" IsTabStop="False" IsEnabled="False" ></TextBox>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Vertical" Width="80">
+                                            <Label Content=""  Width="60" HorizontalAlignment="Right"  />
+                                            <Button Name="btnAdd" Content="Add" Background="#1EAAC7"  Foreground="White" Height="20" FontSize="12"
+                FontWeight="Bold" BorderThickness="0" Cursor="Hand"     Width="70"
+              TabIndex="3" Click="btnAdd_Click" HorizontalAlignment="Left"></Button>
+                                        </StackPanel>
+
+                                    </StackPanel>
+                                    <DataGrid x:Name="dgvItemDetails" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="9" Height="300" Margin="5"
+          RenderOptions.ClearTypeHint="Enabled" AlternationCount="2" IsReadOnly="True"
+          ScrollViewer.CanContentScroll="True" TextOptions.TextFormattingMode="Display"
+          HeadersVisibility="All" SelectionUnit="FullRow" ItemsSource="{Binding aItem}"
+          AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False"
+          KeyDown="dgvItemDetails_KeyDown" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+
+                                        <DataGrid.Resources>
+                                            <!-- Style for column headers -->
+                                            <Style TargetType="DataGridColumnHeader">
+                                                <Setter Property="Background" Value="#1EAAC7"/>
+                                                <!-- Blue color, adjust as needed -->
+                                                <Setter Property="Foreground" Value="White"/>
+                                                <Setter Property="FontWeight" Value="Bold"/>
+                                                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                                <Setter Property="BorderBrush" Value="Gray"/>
+                                                <Setter Property="BorderThickness" Value="0,0,1,1"/>
+                                            </Style>
+                                        </DataGrid.Resources>
+
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Header="SlNo" Width="50" Binding="{Binding Slno}"/>
+                                            <DataGridTextColumn Header="Item Name" Width="200" Binding="{Binding ItemName}"/>
+                                            <DataGridTextColumn Header="Rack" Width="70" Binding="{Binding Rack}"/>
+                                            <DataGridTextColumn Header="Tray" Width="70" Binding="{Binding Tray}"/>
+
+                                            <!--<DataGridTemplateColumn Header="Qty" Width="100">
+                                                <DataGridTemplateColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <TextBox Text="{Binding Qty, UpdateSourceTrigger=PropertyChanged}" 
+                                                             HorizontalAlignment="Center" 
+                                                             VerticalAlignment="Center"
+                                                             PreviewTextInput="Qty_PreviewTextInput"
+                                                             LostFocus="Qty_LostFocus"
+                                                             BorderThickness="0.5"
+                                                             BorderBrush="LightGray"
+                                                             Padding="2"
+                                                             Margin="2"/>           
+                                                    </DataTemplate>
+                                                </DataGridTemplateColumn.CellTemplate>
+                                            </DataGridTemplateColumn>-->
+
+
+                                            <DataGridTemplateColumn Header="Qty" Width="100">
+                                                <DataGridTemplateColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <TextBox Text="{Binding Qty, UpdateSourceTrigger=PropertyChanged}" 
+                                                                         HorizontalAlignment="Center" 
+                                                                         VerticalAlignment="Center"
+                                                                         PreviewTextInput="Qty_PreviewTextInput"
+                                                                         LostFocus="Qty_LostFocus"
+                                                                         BorderThickness="0.5"
+                                                                         BorderBrush="LightGray"
+                                                                         Padding="2"
+                                                                         Margin="2"
+                                                                         TextChanged="Qty_TextChanged">
+                                                            <TextBox.Style>
+                                                                <Style TargetType="TextBox">
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding IsQtyHighlighted}" Value="True">
+                                                                            <Setter Property="Background" Value="Red"/>
+                                                                            <Setter Property="Foreground" Value="White"/>
+                                                                        </DataTrigger>
+                                                                        <DataTrigger Binding="{Binding IsQtyHighlighted}" Value="False">
+                                                                            <Setter Property="Background" Value="White"/>
+                                                                            <Setter Property="Foreground" Value="Black"/>
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </TextBox.Style>
+                                                        </TextBox>
+                                                    </DataTemplate>
+                                                </DataGridTemplateColumn.CellTemplate>
+                                            </DataGridTemplateColumn>
+
+
+
+                                            <DataGridTextColumn Header="BatchNo" Width="100" Binding="{Binding BatchNo}"/>
+                                            <DataGridTextColumn Header="Exp.Dt" Width="100" Binding="{Binding ExpiryDate, StringFormat=dd-MMM-yyyy}"/>
+                                            <DataGridTextColumn Header="MRP" Width="100" Binding="{Binding UnitMrp}"/>
+                                            <!--<DataGridTextColumn Header="Tax(%)" Width="100" Binding="{Binding TaxPer}"/>
+                                        <DataGridTextColumn Header="Tax Amount" Width="100" Binding="{Binding TaxAmount}"/>-->
+                                            <DataGridTextColumn Header="Amount" Width="100" Binding="{Binding Amount}"/>
+                                            <DataGridTextColumn Header="Discount(%)" Width="100" Binding="{Binding DiscPer}"/>
+                                            <DataGridTextColumn Header="Discount" Width="100" Binding="{Binding Discount}"/>
+                                            <!-- Hidden columns -->
+                                            <DataGridTextColumn Header="ItemId" Width="100" Visibility="Hidden" Binding="{Binding ItemId}"/>
+                                            <DataGridTextColumn Header="Rate" Width="100" Visibility="Hidden" Binding="{Binding UnitRate}"/>
+                                            <DataGridTextColumn Header="SupplierId" Visibility="Hidden" Binding="{Binding SupplierID}"/>
+                                            <DataGridTextColumn Header="PurchBillNo" Width="100" Visibility="Hidden" Binding="{Binding PurchBillNo}"/>
+                                            <DataGridTextColumn Header="Bqty" Width="100" Visibility="Hidden" Binding="{Binding BatchQty}"/>
+                                            <DataGridTextColumn Header="Stock" Width="100" Visibility="Hidden" Binding="{Binding StockQty}"/>
+
+                                            <DataGridTemplateColumn Header="Delete" Width="50">
+                                                <DataGridTemplateColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <Button ToolTip="Delete" Click="btnDelete_Click" Name="btnDelete" Padding="0" 
+                            Width="40" Height="25" BorderThickness="0" Style="{StaticResource UnderlinedButtonStyle}" 
+                            Cursor="Hand" Content="Delete"/>
+                                                    </DataTemplate>
+                                                </DataGridTemplateColumn.CellTemplate>
+                                            </DataGridTemplateColumn>
+                                        </DataGrid.Columns>
+
+                                        <DataGrid.RowStyle>
+                                            <Style TargetType="DataGridRow">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsHigh}" Value="true">
+                                                        <Setter Property="Foreground" Value="Red" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding IsLook}" Value="true">
+                                                        <Setter Property="Foreground" Value="Orange" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding IsSound}" Value="true">
+                                                        <Setter Property="Foreground" Value="Orange" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </DataGrid.RowStyle>
+                                    </DataGrid>
+
+                                </Grid>
+                            </GroupBox>
+                            <GroupBox Header="Payment Details" Name="grpPayDet" Grid.Row="5" FontWeight="Bold" Margin="5" TabIndex="9">
+                                <Grid Name="PaymentDet">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <StackPanel Orientation="Horizontal" Grid.Row="1">
+                                        <Label Content="Total Amount"   HorizontalAlignment="Left"  Width="90" />
+                                        <TextBox Name="txtTotalAmt"  Margin="5"  Width="100"  
+                             HorizontalAlignment="Left" IsTabStop="False" IsEnabled="False" ></TextBox>
+
+                                        <Label Content="Discount"   HorizontalAlignment="Right"  Width="80" />
+                                        <TextBox Name="txtDiscount" Margin="5"  Width="100"     
+                             HorizontalAlignment="Left" IsTabStop="False" IsEnabled="False" ></TextBox>
+
+                                        <Label Content="Paid Amount"  HorizontalAlignment="Right"  Width="90" />
+                                        <TextBox Name="txtPaidAmt"  Margin="5"  Width="100" 
+                             HorizontalAlignment="Left" IsTabStop="False" IsEnabled="False" ></TextBox>
+
+                                        <Label Content="Due Amount"  HorizontalAlignment="Right"  Width="90" />
+                                        <TextBox Name="txtDueAmt"  Margin="5"  Width="100" TextChanged="txtDueAmt_TextChanged"    
+                             HorizontalAlignment="Left" IsTabStop="False" IsEnabled="False" ></TextBox>
+
+                                        <Label Content="Due Auth"  HorizontalAlignment="Left" Width="80" />
+                                        <ComboBox Margin="5" x:Name="cmbDueAuth" Height="20" FontSize="12" Width="100" IsEnabled="False" TabIndex="1"  />
+
+                                        <Label Content="Due Reason"   HorizontalAlignment="Right"  Width="80" />
+                                        <TextBox Name="txtDueReason" Margin="5"  Width="200" TabIndex="2" HorizontalAlignment="Left"  IsEnabled="False" ></TextBox>
+
+                                    </StackPanel>
+
+                                    <StackPanel x:Name="DIACPayDetails" Orientation="Horizontal" Grid.Row="2">
+                                        <Label Content="Disount Type"    HorizontalAlignment="Left" Width="90" />
+                                        <ComboBox Margin="5" x:Name="cmbDiscType" Height="20" FontSize="12" Width="100" SelectionChanged="cmbDiscType_SelectionChanged" TabIndex="3" >
+                                            <ComboBoxItem Content="--Select--" ></ComboBoxItem>
+                                            <ComboBoxItem Content="Percentage" ></ComboBoxItem>
+                                            <ComboBoxItem Content="Amount" ></ComboBoxItem>
+                                        </ComboBox>
+
+                                        <Label Content="Percentage"   HorizontalAlignment="Right"  Width="80" />
+                                        <TextBox Name="txtConcPer" Margin="5"   Width="100"  TextChanged="txtConcPer_TextChanged" TabIndex="4" 
+                             HorizontalAlignment="Left" IsTabStop="False" IsEnabled="False" ></TextBox>
+
+                                        <Label Content="Current Disc"   HorizontalAlignment="Right"  Width="90" />
+                                        <TextBox Name="txtConcAmt"  Margin="5"  Width="100" TextChanged="txtConcAmt_TextChanged"  TabIndex="5"
+                             HorizontalAlignment="Left" IsTabStop="False" IsEnabled="False" ></TextBox>
+
+                                        <Label Content="Discount Auth"  HorizontalAlignment="Left" Width="90" />
+                                        <ComboBox Margin="5" x:Name="cmbDiscAuth" Height="20" FontSize="12" Width="100" IsEnabled="False" TabIndex="6" />
+
+                                        <Label Content="Disc Reason"  HorizontalAlignment="Right"  Width="80" />
+                                        <TextBox Name="txtDiscReason" Margin="5"  Width="390" TabIndex="7"   
+                             HorizontalAlignment="Left" IsTabStop="False" IsEnabled="False" ></TextBox>
+                                    </StackPanel>
+
+                                    <StackPanel x:Name="spPayDetails" Orientation="Horizontal" Grid.Row="3">
+                                        <Label Content="Pay Amount"  HorizontalAlignment="Left"  Width="90" />
+                                        <TextBox Name="txtPayAmount" Margin="5" Width="100" TabIndex="8" HorizontalAlignment="Left" TextChanged="txtPayAmount_TextChanged"></TextBox>
+
+                                        <Label Content="Pay Mode"   HorizontalAlignment="Left" Width="80" />
+                                        <ComboBox   Margin="5" x:Name="cmbPayMode" Height="20" FontSize="12" Width="100" DropDownClosed="cmbPayMode_DropDownClosed" TabIndex="9"/>
+
+                                        <Label Content="Wallet Type"   HorizontalAlignment="Left" Width="90" Visibility="Collapsed" Name="lblWallet"/>
+                                        <ComboBox  Margin="5"  x:Name="cmbWalletType" Height="20" FontSize="12" Width="100" Visibility="Collapsed" TabIndex="10"/>
+
+                                        <Label Content="Card No"   HorizontalAlignment="Left" Width="90" Visibility="Collapsed" Name="lblCardNo"/>
+                                        <Label Content="Cheque No"   HorizontalAlignment="Left" Width="90" Visibility="Collapsed" Name="lblCheqNo"/>
+                                        <Label Content="Reference No"   HorizontalAlignment="Left" Width="90" Visibility="Collapsed" Name="lblReferenceNo"/>
+                                        <TextBox Name="txtRefNo" Margin="5"  Width="100" TabIndex="11" HorizontalAlignment="Left" Visibility="Collapsed" ></TextBox>
+                                        <Label Content="Bank"   HorizontalAlignment="Left" Width="90" Visibility="Collapsed" Name="lblBank"/>
+                                        <ComboBox  Margin="5"  x:Name="cmbBank" Height="20" FontSize="12" Width="100" Visibility="Collapsed" TabIndex="12" />
+                                        <Label Content="Cheque Dt."  HorizontalAlignment="Left" Width="80" Visibility="Collapsed" Name="lblCheqDt"/>
+                                        <DatePicker Margin="5"  Name="dtpCheqDt"  Width="120" HorizontalAlignment="Left" Visibility="Collapsed" TabIndex="13"/>
+
+                                        <Button Name="btnPayAdd" Content="Add" Background="#1EAAC7" Foreground="White" Height="20" FontSize="12" TabIndex="14"
+                FontWeight="Bold" BorderThickness="0" Cursor="Hand" Margin="5"    Width="70"
+               Click="btnPayAdd_Click" HorizontalAlignment="Left"></Button>
+                                        <Button Name="btnPayReset" Content="Reset" Background="#C73234" Foreground="White" Height="20" FontSize="12"
+                FontWeight="Bold" BorderThickness="0" Cursor="Hand" Margin="5"    Width="70"
+              TabIndex="15" Click="btnPayReset_Click" HorizontalAlignment="Left"></Button>
+
+                                        <Button Name="btnCalc" Content="Calc" Background="#1EAAC7" Foreground="White" Height="20" FontSize="12"
+                FontWeight="Bold" BorderThickness="0" Cursor="Hand" Margin="5"    Width="70"
+              TabIndex="16" Click="btnCalc_Click" HorizontalAlignment="Left"></Button>
+
+                                        <Label Content="RountOf-Type"  HorizontalAlignment="Left"  Width="90" />
+                                        <TextBox Name="txtRoundOFType" Margin="5" Width="100" TabIndex="8" IsEnabled="False" HorizontalAlignment="Left" ></TextBox>
+
+                                    </StackPanel>
+
+                                    <DataGrid x:Name="dgvPaymentDet"   Grid.Row="4"   Height="100" Margin="5" 
+                      RenderOptions.ClearTypeHint="Enabled"  AlternationCount="2" IsReadOnly="True" ScrollViewer.CanContentScroll="True"
+                  TextOptions.TextFormattingMode="Display" HeadersVisibility="All" SelectionUnit="FullRow" ItemsSource="{Binding}" 
+                      AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False"   VerticalScrollBarVisibility="Auto"
+          HorizontalScrollBarVisibility="Auto">
+                                        <DataGrid.Resources>
+                                            <!-- Style for column headers -->
+                                            <Style TargetType="DataGridColumnHeader">
+                                                <Setter Property="Background" Value="#1EAAC7"/>
+                                                <!-- Blue color, adjust as needed -->
+                                                <Setter Property="Foreground" Value="White"/>
+                                                <Setter Property="FontWeight" Value="Bold"/>
+                                                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                                <Setter Property="BorderBrush" Value="Gray"/>
+                                                <Setter Property="BorderThickness" Value="0,0,1,1"/>
+                                            </Style>
+                                        </DataGrid.Resources>
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Header="SlNo" Width="50" Binding="{Binding Slno}"/>
+                                            <DataGridTextColumn Header="Amount" Width="150" Binding="{Binding Amount}"/>
+                                            <DataGridTextColumn Header="Pay Mode" Width="100" Binding="{Binding PayMode}"/>
+                                            <DataGridTextColumn Header="Wallet Type" Width="100" Binding="{Binding WalletAccount}"/>
+                                            <DataGridTextColumn Header="Reference No" Width="120" Binding="{Binding TransNo}"/>
+                                            <DataGridTextColumn Header="Reference Bank" Width="120" Binding="{Binding Bank}"/>
+                                            <DataGridTextColumn Header="Reference Date" Width="120" Binding="{Binding RefDt}"/>
+
+                                            <DataGridTemplateColumn Header="Delete" Width="50">
+                                                <DataGridTemplateColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <Button ToolTip="Delete" Click="btnPayDelete_Click" Name="btnPayDelete" Padding="0" 
+                           Width="40" Height="25" BorderThickness="0" Style="{StaticResource UnderlinedButtonStyle}"  Cursor="Hand" Content="Delete" />
+                                                    </DataTemplate>
+                                                </DataGridTemplateColumn.CellTemplate>
+                                            </DataGridTemplateColumn>
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                </Grid>
+                            </GroupBox>
+                            <StackPanel Orientation="Horizontal" Grid.Row="6" Margin="10">
+                                <Label Content="Transaction Code" HorizontalAlignment="Left" Width="120" FontWeight="Bold" TabIndex="10"/>
+                                <TextBox Name="txtTrnsCode" Height="20" Width="110" HorizontalAlignment="Left" ></TextBox>
+                                <Button Name="btnSave" Content="Save" Background="#1EAAC7" Foreground="White" Height="20" FontSize="12"
+                FontWeight="Bold" BorderThickness="0" Cursor="Hand" Margin="5"    Width="70"
+              TabIndex="11" Click="btnSave_Click" HorizontalAlignment="Left"></Button>
+                                <Button Name="btnReset" Content="Reset" Background="#C73234" Foreground="White" Height="20" FontSize="12"
+                FontWeight="Bold" BorderThickness="0" Cursor="Hand" Margin="5"    Width="70"
+              TabIndex="12" Click="btnReset_Click" HorizontalAlignment="Left"></Button>
+                            </StackPanel>
+                        </Grid>
+
+                    </StackPanel>
+                </ScrollViewer>
+                <Popup Name="UHIDPopUp" Placement="MousePoint" IsOpen="False" Height="400" Width="850" Visibility="Collapsed" >
+                    <Border  BorderBrush="Black" BorderThickness="1" Padding="10" Background="White">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <StackPanel Orientation="Horizontal" Grid.Row="1">
+                                <Label Content="From Dt." Margin="5"  Width="70" />
+                                <DatePicker Margin="5" Name="dtpUHIDFrom" Width="150" 
+                          HorizontalAlignment="Left" VerticalAlignment="Top" />
+                                <Label Content="To Dt." Margin="5" Width="50" HorizontalAlignment="Right" />
+                                <DatePicker Margin="5"  Name="dtpUHIDTo" Width="150" 
+                         HorizontalAlignment="Left" />
+                                <TextBox Name="txtSearch" Margin="5"  Width="200"  HorizontalAlignment="Left"   ></TextBox>
+
+                                <Button x:Name="btnUHIDGo" Content="Go" Background="#1EAAC7" Foreground="White" Height="25" Width="50" FontSize="12"
+                FontWeight="Bold" BorderThickness="0" Cursor="Hand" Margin="5" 
+              TabIndex="1" Click="btnUHIDGo_Click" HorizontalAlignment="Left"></Button>
+                            </StackPanel>
+
+                            <DataGrid x:Name="dgvPatientDetails"   Height="300"  Margin="5" Grid.Row="2"
+                      RenderOptions.ClearTypeHint="Enabled"  AlternationCount="2" IsReadOnly="True" ScrollViewer.CanContentScroll="True"
+                  TextOptions.TextFormattingMode="Display" HeadersVisibility="All" SelectionUnit="FullRow" ItemsSource="{Binding}" 
+                      AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False"   >
+                                <DataGrid.Resources>
+                                    <!-- Style for column headers -->
+                                    <Style TargetType="DataGridColumnHeader">
+                                        <Setter Property="Background" Value="#1EAAC7"/>
+                                        <!-- Blue color, adjust as needed -->
+                                        <Setter Property="Foreground" Value="White"/>
+                                        <Setter Property="FontWeight" Value="Bold"/>
+                                        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                        <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                        <Setter Property="BorderBrush" Value="Gray"/>
+                                        <Setter Property="BorderThickness" Value="0,0,1,1"/>
+                                    </Style>
+                                </DataGrid.Resources>
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="SLNO" Width="50" Binding="{Binding Slno}"/>
+                                    <DataGridTextColumn Header="UHID" Width="150" Binding="{Binding UHID}"/>
+                                    <DataGridTextColumn Header="IPDNo" Width="150" Binding="{Binding IPDNo}"/>
+                                    <DataGridTextColumn Header="Admission Dt" Width="100"  Binding="{Binding AdmDate, StringFormat=dd-MMM-yyyy}" />
+                                    <DataGridTextColumn Header="Name" Width="200" Binding="{Binding Name}"/>
+                                    <DataGridTextColumn Header="Phone" Width="100" Binding="{Binding Phone}"/>
+                                    <DataGridTextColumn Header="Consultant" Width="150" Binding="{Binding DocName}"/>
+                                    <DataGridTextColumn Header="Payer" Width="100" Binding="{Binding PayerType}"/>
+                                    <DataGridTextColumn Header="DocId" Width="100" Binding="{Binding DocId}" Visibility="Hidden"/>
+                                    <!--<DataGridTextColumn Header="RefSourceID" Width="100" Binding="{Binding RefSourceID}" Visibility="Hidden"/>
+                                    <DataGridTextColumn Header="OrganisationID" Width="100" Binding="{Binding OrganisationID}" Visibility="Hidden"/>
+                                    <DataGridTextColumn Header="Age" Width="100" Binding="{Binding Age}" Visibility="Hidden"/>
+                                    <DataGridTextColumn Header="PrescriptionID" Width="100" Binding="{Binding PrescriptionID}" Visibility="Hidden"/>-->
+                                    <DataGridTemplateColumn Header="View" Width="50">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Button ToolTip="View" Click="btnUHIDView_Click" Name="btnUHIDView" Background="Transparent"
+                             Cursor="Hand" Content="View" Style="{StaticResource UnderlinedButtonStyle}"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                </DataGrid.Columns>
+
+
+                            </DataGrid>
+                            <Button Name="btnPOPCalc" Content="Close" Background="#C73234" Foreground="White" Height="20" FontSize="12"
+                FontWeight="Bold" BorderThickness="0" Cursor="Hand" Margin="5"    Width="70"
+              TabIndex="16" Click="btnPOPCalc_Click" HorizontalAlignment="Right"></Button>
+                        </Grid>
+
+                    </Border>
+                </Popup>
+
+                <!--<Popup Name="IndentPopUp" Placement="MousePoint" IsOpen="False" Height="400" Width="1000" Visibility="Collapsed" >
+                    <Border  BorderBrush="Black" BorderThickness="1" Padding="10" Background="White">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <StackPanel Orientation="Horizontal" Grid.Row="1">
+
+                                <StackPanel Orientation="Vertical" Width="160">
+                                    <Label Content="Nursing Station"  HorizontalAlignment="Left" />
+                                    <ComboBox Name="cmbNursingstation" SelectionChanged="cmbNursingstation_SelectionChanged" Height="20" FontSize="12"  Width="150" HorizontalAlignment="Left"  
+                                       TabIndex="7"  IsEditable="True" IsTextSearchEnabled="False" StaysOpenOnEdit="True" />
+                                </StackPanel>
+                                <StackPanel Orientation="Vertical" Width="160">
+                                    <Label Content="Ward"  HorizontalAlignment="Left" />
+                                    <ComboBox Name="cmbWard" SelectionChanged="cmbWard_SelectionChanged" Height="20" FontSize="12"  Width="150" HorizontalAlignment="Left"  
+                                       TabIndex="7"  IsEditable="True" IsTextSearchEnabled="False" StaysOpenOnEdit="True" />
+                                </StackPanel>
+                                <StackPanel Orientation="Vertical" Width="160">
+                                    <Label Content="Rooms"  HorizontalAlignment="Left" />
+                                    <ComboBox Name="cmbRooms" Height="20" FontSize="12"  Width="150" HorizontalAlignment="Left"  
+                                       TabIndex="7"   IsEditable="True" IsTextSearchEnabled="False" StaysOpenOnEdit="True" >
+
+                                    </ComboBox>
+                                </StackPanel>
+                                <StackPanel Orientation="Vertical" Width="160">
+                                    <Label Content="Type"  HorizontalAlignment="Left" />
+                                    <ComboBox Name="cmbType" Height="20" FontSize="12"  Width="150" HorizontalAlignment="Left"  
+                                       TabIndex="7"  IsEditable="True" IsTextSearchEnabled="False" StaysOpenOnEdit="True" />
+                                </StackPanel>
+                                <StackPanel Orientation="Vertical" Width="160">
+                                    <Label Content="Indent Search"  HorizontalAlignment="Left" />
+                                    <TextBox Name="txtIndentSearch" Margin="5"  Width="200"  HorizontalAlignment="Left"   ></TextBox>
+
+                                </StackPanel>
+                                <StackPanel Orientation="Vertical" Width="160">
+                                    <Label Content=""  HorizontalAlignment="Left" />
+                                    <Button x:Name="btnIndentGo" Content="Go" Background="#1EAAC7" Foreground="White" Height="25" Width="50" FontSize="12"
+                FontWeight="Bold" BorderThickness="0" Cursor="Hand" Margin="5" 
+              TabIndex="1" Click="btnIndentGo_Click" HorizontalAlignment="Left"></Button>
+                                </StackPanel>
+                            </StackPanel>
+
+                            <DataGrid x:Name="dgvIndentDetails"   Height="500"   Margin="5" Grid.Row="2"
+                      RenderOptions.ClearTypeHint="Enabled"  AlternationCount="2" IsReadOnly="True" ScrollViewer.CanContentScroll="True"
+                  TextOptions.TextFormattingMode="Display" HeadersVisibility="All"  SelectionUnit="FullRow" ItemsSource="{Binding}" 
+                      AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False"   >
+
+                                <DataGrid.Resources>
+                                    --><!-- Style for column headers --><!--
+                                    <Style TargetType="DataGridColumnHeader">
+                                        <Setter Property="Background" Value="#1EAAC7"/>
+                                        --><!-- Blue color, adjust as needed --><!--
+                                        <Setter Property="Foreground" Value="White"/>
+                                        <Setter Property="FontWeight" Value="Bold"/>
+                                        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                        <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                        <Setter Property="BorderBrush" Value="Gray"/>
+                                        <Setter Property="BorderThickness" Value="0,0,1,1"/>
+                                    </Style>
+                                </DataGrid.Resources>
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="SLNO" Width="50" Binding="{Binding Slno}"/>
+                                    <DataGridTextColumn Header="Indent No" Width="150" Binding="{Binding IndentNo}"/>
+                                    <DataGridTextColumn Header="Indent Date" Width="150" Binding="{Binding IndentDate, StringFormat=dd-MMM-yyyy}"/>
+                                    <DataGridTextColumn Header="IP No" Width="100"  Binding="{Binding OPIPDNo}" />
+                                    <DataGridTextColumn Header="Name" Width="200" Binding="{Binding Name}"/>
+                                    <DataGridTextColumn Header="Consultant" Width="100" Binding="{Binding DocName}"/>
+                                    <DataGridTextColumn Header="Bed/Room" Width="150" Binding="{Binding RoomNo}"/>
+                                    <DataGridTextColumn Header="Nursing Station" Width="100" Binding="{Binding NursingStationName}"/>
+                                    <DataGridTextColumn Header="Department" Width="100" Binding="{Binding DepartmentName}"/>
+                                    <DataGridTextColumn Header="Status" Width="100" Binding="{Binding IssueStatus}"/>
+                                    --><!--<DataGridTextColumn Header="RefSourceID" Width="100" Binding="{Binding RefSourceID}" Visibility="Hidden"/>
+                                    <DataGridTextColumn Header="OrganisationID" Width="100" Binding="{Binding OrganisationID}" Visibility="Hidden"/>
+                                    <DataGridTextColumn Header="Age" Width="100" Binding="{Binding Age}" Visibility="Hidden"/>
+                                    <DataGridTextColumn Header="PrescriptionID" Width="100" Binding="{Binding PrescriptionID}" Visibility="Hidden"/>--><!--
+                                    <DataGridTemplateColumn Header="View" Width="50">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Button ToolTip="View" Click="btnIndentView_Click" Name="btnIndentView" Background="Transparent"
+                             Cursor="Hand" Content="View" Style="{StaticResource UnderlinedButtonStyle}"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                </DataGrid.Columns>
+
+
+                            </DataGrid>
+                            <Button Name="btnPOPIndent" Content="Close" Background="#C73234" Foreground="White" Height="20" FontSize="12"
+                FontWeight="Bold" BorderThickness="0" Cursor="Hand" Margin="5"    Width="70"
+              TabIndex="16" Click="btnPOPIndent_Click" HorizontalAlignment="Right"></Button>
+                        </Grid>
+
+                    </Border>
+                </Popup>-->
+
+            </Grid>
+        </Border>
+    </ScrollViewer>
+</UserControl>
+
+

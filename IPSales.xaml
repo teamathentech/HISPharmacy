@@ -1,0 +1,786 @@
+﻿<UserControl x:Class="HISPharmacy.Pharmacy.IPSales"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"             
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+    xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+    xmlns:local="clr-namespace:HISPharmacy.GeneralModules"
+    xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns:behaviors="clr-namespace:HISPharmacy.GeneralModules"
+    mc:Ignorable="d"   HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+     Loaded="Page_Loaded"  KeyboardNavigation.TabNavigation="Continue" PreviewKeyDown="Sales_PreviewKeyDown">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro.Resources;component/Icons.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+            <SolidColorBrush x:Key="brushWatermarkBackground" Color="White" />
+            <SolidColorBrush x:Key="brushWatermarkForeground" Color="LightSteelBlue" />
+            <SolidColorBrush x:Key="brushWatermarkBorder" Color="Indigo" />
+            <Thickness x:Key="ControlMargin">0 5 5 0</Thickness>
+           
+        </ResourceDictionary>
+
+    </UserControl.Resources> 
+        <Grid  HorizontalAlignment="Stretch"
+             VerticalAlignment="Stretch" Background="White">
+            <Border BorderBrush="Gray"  BorderThickness="2" CornerRadius="10" Padding="2"
+                Background="White" Margin="3"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
+                <Grid KeyboardNavigation.TabNavigation="Continue">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Name="TitlePanel" Visibility="Visible" Grid.Row="0" >
+                        <Border BorderBrush="LightGray"  BorderThickness="0,0,0,1" CornerRadius="10" Padding="2"
+                Background="White" Margin="3"  >
+                            <Grid x:Name="grdTitle">
+                                <Label Content="IP Sales" FontSize="16" FontWeight="Bold"
+                               Foreground="#17a2b8" VerticalAlignment="Center"
+                               Margin="10,0,0,0" IsTabStop="False"/>
+
+                                <Button x:Name="btnNew" Content="+Add New" Background="#1EAAC7" Foreground="White" Height="22" Width="65" FontSize="12"
+                FontWeight="Bold"  Cursor="Hand" Margin="5,5,5,5" Grid.Row="0" Grid.Column="5" 
+              TabIndex="5" Click="btnNew_Click" HorizontalAlignment="Right"/>
+
+                            </Grid>
+                        </Border>
+                    </StackPanel>
+
+                    <StackPanel Name="GridPanel" Visibility="Visible" Grid.Row="1" KeyboardNavigation.TabNavigation="Continue">
+                        <Grid Name="grdGrid">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+
+                            <Label Content="From Dt." Margin="3" Grid.Row ="1" Grid.Column="0" Width="70" IsTabStop="False" />
+                            <DatePicker Margin="3" Grid.Row ="1" Grid.Column="1" Name="dtpFrom" Width="150" 
+                          HorizontalAlignment="Left" VerticalAlignment="Top" TabIndex="0"/>
+                            <Label Content="To Dt." Margin="3" Grid.Row ="1" Grid.Column="2" Width="50" HorizontalAlignment="Right" IsTabStop="False" />
+                            <DatePicker Margin="3" Grid.Row ="1" Grid.Column="3" Name="dtpTo" Width="150" TabIndex="1" HorizontalAlignment="Left" />
+                            <Label Content="Patient Name" Margin="3" Grid.Row ="1" Grid.Column="4" IsTabStop="False" />
+                            <TextBox x:Name="txtFindBillNo" Grid.Row="1" Grid.Column="5" Margin="5,5,5,5" Width="150" HorizontalAlignment="Left" TabIndex="3" ></TextBox>
+                            <Button x:Name="btnGo" Content="Go" Background="#1EAAC7" Foreground="White" Height="20" Width="50" FontSize="12"
+                            FontWeight="Bold" BorderThickness="0" Cursor="Hand" Margin="5,5,5,5" Grid.Row="1" Grid.Column="6" 
+                          TabIndex="5" Click="btnGo_Click" HorizontalAlignment="Left"></Button>
+
+                            <DataGrid x:Name="dgvIPSalesFind" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="7" Height="450" Margin="3" 
+                      RenderOptions.ClearTypeHint="Enabled"  AlternationCount="2" IsReadOnly="True" ScrollViewer.CanContentScroll="True"
+                  TextOptions.TextFormattingMode="Display" HeadersVisibility="All" SelectionUnit="FullRow" ItemsSource="{Binding}" 
+                      AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False"   VerticalScrollBarVisibility="Auto"
+                        HorizontalScrollBarVisibility="Auto" IsTabStop="False" ColumnHeaderStyle="{StaticResource GridHeaderStyle}" RowStyle="{StaticResource GridRowStyle}" >
+
+                                <DataGrid.Columns>
+
+                                    <DataGridTextColumn Header="SlNo" Width="50" 
+                                    Binding="{Binding Slno}" />
+                                    <DataGridTemplateColumn Header="View" Width="50">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                            <Button ToolTip="View" Click="btnView_Click" Name="btnView"
+                                            Padding="0" Width="40" Height="25" BorderThickness="0"
+                                            Cursor="Hand" Content="View" Style="{StaticResource GridViewButtonStyle}"/>
+                                        </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn Header="Print" Width="50">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                            <Button ToolTip="Print" Click="btnPrint_Click" Name="btnPrint"
+                                            Padding="0" Width="40" Height="25" BorderThickness="0"
+                                            Cursor="Hand" Content="Print" Style="{StaticResource GridPrintButtonStyle}"/>  
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+
+                                    <DataGridTextColumn Header="UHID" Width="100" 
+                                    Binding="{Binding UHID}"  />
+                                    <DataGridTextColumn Header="IPDNo" Width="100"
+                                    Binding="{Binding IPOPNo}" />
+                                    <DataGridTextColumn Header="Name" Width="150"
+                                    Binding="{Binding Name}"/>
+                                    <DataGridTextColumn Header="BillNo" Width="100" Foreground="Green" FontWeight="Bold"
+                                    Binding="{Binding BillNo}" />
+                                    <DataGridTextColumn Header="Bill Date"  Width="100"
+                                    Binding="{Binding BillDate, StringFormat=dd-MMM-yyyy}"/>
+                                    <DataGridTextColumn Header="Total Amount"  Width="100" 
+                                    Binding="{Binding TotalCharges}" />
+                                    <DataGridTextColumn Header="Discount"  Width="100"
+                                    Binding="{Binding Discount}" />
+                                    <DataGridTextColumn Header="Paid"  Width="100"
+                                    Binding="{Binding Paid}" />
+                                    <DataGridTextColumn Header="Due"  Width="100"
+                                    Binding="{Binding Due}" />
+                                    <DataGridTextColumn Header="Due Auth"  Width="100"
+                                    Binding="{Binding DueAuth}" />
+                                    <DataGridTextColumn Header="Due Reason"  Width="100"
+                                    Binding="{Binding DueReason}" />
+                                    <DataGridTextColumn Header="Created By" Width="100" 
+                                    Binding="{Binding CreateUserID}" />
+                                    <DataGridTextColumn Header="Department"  Width="100"
+                                    Binding="{Binding DepartmentName}" />
+                                    <DataGridTextColumn Header="Location"  Width="100"
+                                    Binding="{Binding LocationName}" />
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </Grid>
+
+                    </StackPanel>
+                    <ScrollViewer x:Name="scrollFormPanel"  VerticalScrollBarVisibility="Disabled"  HorizontalScrollBarVisibility="Disabled" Grid.Row="2"  >
+                        <StackPanel Name="FormPanel" Visibility="Collapsed" KeyboardNavigation.TabNavigation="Continue">
+
+                        <StackPanel Orientation="Horizontal" KeyboardNavigation.TabNavigation="Continue">
+                                <Label Content="Sale Type"  HorizontalAlignment="Left" FontWeight="Bold" IsTabStop="False"/>
+                                <ComboBox  x:Name="cmbSaleType" Height="20" FontSize="12" TabIndex="1"
+                                        HorizontalAlignment="Left" Width="80" SelectionChanged="cmbSaleType_SelectionChanged">
+                                    <ComboBoxItem Content="--Select--" ></ComboBoxItem>
+                                    <ComboBoxItem Content="Direct" ></ComboBoxItem>
+                                    <ComboBoxItem Content="Indent" ></ComboBoxItem>
+                                </ComboBox>
+                            <Label x:Name="lblUHIDPhone" Content="UHID/Phone No" HorizontalAlignment="Left" FontWeight="Bold" Visibility="Collapsed"  IsTabStop="False"/>
+                                <TextBox x:Name="txtUHIDPhone" Width="150" HorizontalAlignment="Left" TabIndex="2" Visibility="Collapsed" />
+
+                            <Label x:Name="lblIndentNo1" Content="Indent No" HorizontalAlignment="Left" FontWeight="Bold" Visibility="Collapsed"  IsTabStop="False"/>
+                                <TextBox x:Name="txtIndentPhone" Width="150" HorizontalAlignment="Left" TabIndex="2" Visibility="Collapsed" />
+
+                                <Button x:Name="btnFind" Content="Find" Background="#1EAAC7" Foreground="White" Height="20" Width="50" FontSize="12"
+                FontWeight="Bold" BorderThickness="0" Margin="3" TabIndex="3" Cursor="Hand" Click="btnFind_Click" HorizontalAlignment="Left"></Button>
+
+                            <Label Content="OPD-F1" Margin="3"   Foreground="Red" IsTabStop="False"/>
+                            <Label Content="Others-F2" Margin="3"  Foreground="Red" IsTabStop="False" />
+                            <Label Content="Search-F6" Margin="3" Foreground="Red" IsTabStop="False"/>
+                            <Label Content="Generic-Shift+F1" Margin="3" Foreground="Red" IsTabStop="False"/>
+                            <Label Content="Department Stock-Shift+F2" Margin="3" Foreground="Red" IsTabStop="False"/>
+                            </StackPanel>
+
+                        <GroupBox Header="Patient Details" Name="grpPatDet" FontWeight="Bold" Margin="5,0,5,0" KeyboardNavigation.TabNavigation="Continue">
+
+                            <UniformGrid Columns="4" Margin="5">
+
+                                <StackPanel Orientation="Horizontal" Margin="4">
+                                    <Label Content="UHID/IPDNo" Width="110"/>
+                                    <Label Content=":" Width="10"/>
+                                    <TextBlock Name="lblUHID" Foreground="Chocolate" VerticalAlignment="Center"/>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" Margin="4">
+                                    <Label Content="DOA" Width="110"/>
+                                    <Label Content=":" Width="10"/>
+                                    <TextBlock Name="DOALabel" VerticalAlignment="Center"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="4">
+                                    <Label Content="Name" Width="110"/>
+                                    <Label Content=":" Width="10"/>
+                                    <TextBlock Name="NameLabel" VerticalAlignment="Center"/>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" Margin="4">
+                                    <Label Content="Indent No" Width="110"/>
+                                    <Label Content=":" Width="10"/>
+                                    <TextBlock Name="lblIndentNo" VerticalAlignment="Center"/>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" Margin="4">
+                                    <Label Content="Age/Gender" Width="110"/>
+                                    <Label Content=":" Width="10"/>
+                                    <TextBlock Name="AgeGenderLabel" VerticalAlignment="Center"/>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" Margin="4">
+                                    <Label Content="Primary Dr" Width="110"/>
+                                    <Label Content=":" Width="10"/>
+                                    <TextBlock Name="PrimaryDrLabel" VerticalAlignment="Center"/>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" Margin="4">
+                                    <Label Content="Admission Type" Width="110"/>
+                                    <Label Content=":" Width="10"/>
+                                    <TextBlock Name="AdmissionLabel" VerticalAlignment="Center"/>
+                                </StackPanel>
+                                
+                                <StackPanel Orientation="Horizontal" Margin="4">
+                                    <Label Content="Date" Width="110"/>
+                                    <Label Content=":" Width="10"/>
+                                    <TextBlock Name="lblIndentDate" VerticalAlignment="Center"/>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" Margin="4">
+                                    <Label Content="Guardian" Width="110"/>
+                                    <Label Content=":" Width="10"/>
+                                    <TextBlock Name="GuardianLabel" VerticalAlignment="Center"/>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" Margin="4">
+                                    <Label Content="BedNo/RoomNo" Width="110"/>
+                                    <Label Content=":" Width="10"/>
+                                    <TextBlock Name="BedRoomNoLabel" VerticalAlignment="Center"/>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" Margin="4">
+                                    <Label Content="Room Type" Width="110"/>
+                                    <Label Content=":" Width="10"/>
+                                    <TextBlock Name="RoomTypeLabel" VerticalAlignment="Center"/>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" Margin="4">
+                                    <Label Content="Indent By" Width="110"/>
+                                    <Label Content=":" Width="10"/>
+                                    <TextBlock Name="IndentbyLabel" VerticalAlignment="Center"/>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" Margin="4">
+                                    <Label Content="Phone No" Width="110"/>
+                                    <Label Content=":" Width="10"/>
+                                    <TextBlock Name="PhoneLabel" VerticalAlignment="Center"/>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" Margin="4">
+                                    <Label Content="Address" Width="110" VerticalAlignment="Top"/>
+                                    <Label Content=":" Width="10" VerticalAlignment="Top"/>
+                                    <TextBlock Name="AddressLabel" TextWrapping="Wrap" Width="180"/>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" Margin="4">
+                                    <Label Content="Payer" Width="110"/>
+                                    <Label Content=":" Width="10"/>
+                                    <TextBlock Name="PayerLabel" VerticalAlignment="Center"/>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" Margin="4">
+                                    <Label Content="Status" Width="110"/>
+                                    <Label Content=":" Width="10"/>
+                                    <TextBlock Name="StatusLabel" VerticalAlignment="Center"/>
+                                </StackPanel>
+                                
+                                <StackPanel Orientation="Horizontal" Margin="4">
+                                    <Label Content="Remarks" Width="110" VerticalAlignment="Top"/>
+                                    <Label Content=":" Width="10" VerticalAlignment="Top"/>
+                                    <TextBlock Name="RemarksLabel" TextWrapping="Wrap" Width="180"/>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" Margin="4" Visibility="Collapsed">
+                                    <TextBlock Name="DocIDLabel"/>
+                                    <TextBlock Name="BedIDLabel"/>
+                                    <TextBlock Name="OrgIDLabel"/>
+                                </StackPanel>
+
+                            </UniformGrid>
+                        </GroupBox>
+
+                        <GroupBox Header="Item Details" Name="grpItemDet" FontWeight="Bold" Margin="5,0,5,0" KeyboardNavigation.TabNavigation="Continue">
+                            <Grid Name="ItemDet" KeyboardNavigation.TabNavigation="Continue">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <WrapPanel Orientation="Horizontal" Grid.Row="0" KeyboardNavigation.TabNavigation="Continue">
+
+                                    <StackPanel Orientation="Vertical" MinWidth="280" Margin="3,0,3,0" KeyboardNavigation.TabNavigation="Continue">
+                                            <Label Content="Item Name"   HorizontalAlignment="Left" Width="100" />
+                                            <TextBox Name="txtItem" MinWidth="270" FontSize="12" Height="23" TabIndex="7"
+                                             TextChanged="txtItem_TextChanged"
+                                             PreviewKeyDown="txtItem_PreviewKeyDown"
+                                             GotFocus="txtItem_GotFocus"
+                                             LostFocus="txtItem_LostFocus"/>
+                                            <Popup Name="popup"
+                                           PlacementTarget="{Binding ElementName=txtItem}"
+                                           Placement="Bottom"
+                                           IsOpen="{Binding ElementName=popupButton, Path=IsOpen}">
+                                                <ListBox x:Name="lstItems" Height="150" Width="300"
+                                                 DisplayMemberPath="ItemName"
+                                                 ItemsSource="{Binding FilteredItems}"
+                                                 PreviewKeyDown="lstItems_PreviewKeyDown"
+                                                 MouseDoubleClick="lstItems_MouseDoubleClick"
+                                                 LostFocus="lstItems_LostFocus"
+                                                 IsTabStop="False">
+                                                    <ListBox.ItemContainerStyle>
+                                                        <Style TargetType="ListBoxItem">
+                                                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                                            <Style.Triggers>
+                                                                <Trigger Property="IsSelected" Value="True">
+                                                                    <Setter Property="Background" Value="LightBlue"/>
+                                                                    <Setter Property="Foreground" Value="Black"/>
+                                                                </Trigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </ListBox.ItemContainerStyle>
+                                                </ListBox>
+                                            </Popup>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Vertical" MinWidth="120" Margin="3,0,3,0" KeyboardNavigation.TabNavigation="None">
+                                        <Label Content="Batch No"  HorizontalAlignment="Left" Width="70" />
+                                            <ComboBox x:Name="cmbBatchNo" Height="20" FontSize="12"  Width="120"
+                                      TabIndex="1" HorizontalAlignment="Left" SelectionChanged="cmbBatchNo_SelectionChanged"  />
+                                    </StackPanel>
+                                    <StackPanel Orientation="Vertical" MinWidth="80" Margin="3,0,3,0" KeyboardNavigation.TabNavigation="None">
+                                        <Label Content="B.Qty"  HorizontalAlignment="Left" Width="80" />
+                                            <TextBox Name="txtBQty" Height="20"  Width="80"    
+                             HorizontalAlignment="Left" IsTabStop="False" IsEnabled="False" ></TextBox>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Vertical" MinWidth="80" Margin="3,0,3,0" KeyboardNavigation.TabNavigation="None">
+                                        <Label Content="T.Qty"  HorizontalAlignment="Left" Width="80" />
+                                            <TextBox Name="txtTQty" Height="20"   Width="80"    
+                             HorizontalAlignment="Left" IsTabStop="False" IsEnabled="False" ></TextBox>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Vertical" MinWidth="120" Margin="3,0,3,0" KeyboardNavigation.TabNavigation="None">
+                                        <Label Content="Exp.Dt"   HorizontalAlignment="Left" Width="70" />
+                                            <DatePicker Height="25" Name="dtpExpDt"  Width="120" Foreground="Black"
+                            HorizontalAlignment="Left" IsTabStop="False" IsEnabled="False" />
+                                    </StackPanel>
+                                    <StackPanel Orientation="Vertical" MinWidth="80" Margin="3,0,3,0" KeyboardNavigation.TabNavigation="Continue">
+                                        <Label Content="Issue Qty"  HorizontalAlignment="Left" Width="60"  />
+                                            <TextBox Name="txtQty" Height="20" Width="80"
+                             HorizontalAlignment="Left" TabIndex="2" TextChanged="txtQty_TextChanged"  PreviewKeyDown="txtQty_PreviewKeyDown" ></TextBox>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Vertical" MinWidth="100" Margin="3,0,3,0" KeyboardNavigation.TabNavigation="None">
+                                        <Label Content="MRP" HorizontalAlignment="Left" Width="80" />
+                                            <TextBox Name="txtMRP" Height="20" Width="110"
+                             HorizontalAlignment="Left" IsTabStop="False" IsEnabled="False" ></TextBox>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Vertical" MinWidth="150" Margin="3,0,3,0" Visibility="Collapsed" KeyboardNavigation.TabNavigation="None">
+                                        <Label Content="Tax Amount"   HorizontalAlignment="Right"  Width="80" />
+                                            <TextBox Name="txtTaxAmt"   Width="150"   Height="20"  
+                             HorizontalAlignment="Left" IsTabStop="False" IsEnabled="False" ></TextBox>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Vertical" MinWidth="110" Margin="3,0,3,0" KeyboardNavigation.TabNavigation="None">
+                                        <Label Content="Amount"    Width="60" HorizontalAlignment="Left"  />
+                                            <TextBox Name="txtAmount"    Width="120"   Height="20" 
+                             HorizontalAlignment="Left" IsTabStop="False" IsEnabled="False" ></TextBox>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Vertical" Width="80" Margin="3,0,3,0" KeyboardNavigation.TabNavigation="Continue">
+                                        <Label Content=""  Width="60" HorizontalAlignment="Right"  />
+                                            <Button Name="btnAdd" Content="Add" Background="#1EAAC7"  Foreground="White" Height="20" FontSize="12"
+                                            FontWeight="Bold" BorderThickness="0" Cursor="Hand"     Width="70"
+                                          TabIndex="3" Click="btnAdd_Click" HorizontalAlignment="Left"></Button>
+                                        </StackPanel>
+ 
+                                    <DataGrid x:Name="dgvItemDetails" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="9" Height="300" Margin="3"
+                                              RenderOptions.ClearTypeHint="Enabled" AlternationCount="2" IsReadOnly="True"
+                                              ScrollViewer.CanContentScroll="True" TextOptions.TextFormattingMode="Display"
+                                              HeadersVisibility="All" SelectionUnit="FullRow" ItemsSource="{Binding aItem}"
+                                              AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False"
+                                              KeyDown="dgvItemDetails_KeyDown" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
+                                              ColumnHeaderStyle="{StaticResource GridHeaderStyle}">
+
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Header="SlNo" Width="50" Binding="{Binding Slno}"/>
+                                            <DataGridTextColumn Header="Item Name" Width="200" Binding="{Binding ItemName}"/>
+                                            <DataGridTextColumn Header="Rack" Width="70" Binding="{Binding Rack}"/>
+                                            <DataGridTextColumn Header="Tray" Width="70" Binding="{Binding Tray}"/>
+ 
+                                            <DataGridTemplateColumn Header="Qty" Width="100">
+                                                <DataGridTemplateColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <TextBox Text="{Binding Qty, UpdateSourceTrigger=PropertyChanged}" 
+                                                                         HorizontalAlignment="Center" 
+                                                                         VerticalAlignment="Center"
+                                                                         PreviewTextInput="Qty_PreviewTextInput"
+                                                                         LostFocus="Qty_LostFocus"
+                                                                         BorderThickness="0.5"
+                                                                         BorderBrush="LightGray"
+                                                                         Padding="2"
+                                                                         Margin="2"
+                                                                         TextChanged="Qty_TextChanged">
+                                                            <TextBox.Style>
+                                                                <Style TargetType="TextBox">
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding IsQtyHighlighted}" Value="True">
+                                                                            <Setter Property="Background" Value="Red"/>
+                                                                            <Setter Property="Foreground" Value="White"/>
+                                                                        </DataTrigger>
+                                                                        <DataTrigger Binding="{Binding IsQtyHighlighted}" Value="False">
+                                                                            <Setter Property="Background" Value="White"/>
+                                                                            <Setter Property="Foreground" Value="Black"/>
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </TextBox.Style>
+                                                        </TextBox>
+                                                    </DataTemplate>
+                                                </DataGridTemplateColumn.CellTemplate>
+                                            </DataGridTemplateColumn>
+
+                                            <DataGridTextColumn Header="BatchNo" Width="100" Binding="{Binding BatchNo}"/>
+                                            <DataGridTextColumn Header="Exp.Dt" Width="100" Binding="{Binding ExpiryDate, StringFormat=dd-MMM-yyyy}"/>
+                                            <DataGridTextColumn Header="MRP" Width="100" Binding="{Binding UnitMrp}"/>
+                                            <!--<DataGridTextColumn Header="Tax(%)" Width="100" Binding="{Binding TaxPer}"/>
+                                        <DataGridTextColumn Header="Tax Amount" Width="100" Binding="{Binding TaxAmount}"/>-->
+                                            <DataGridTextColumn Header="Amount" Width="100" Binding="{Binding Amount}"/>
+                                            <DataGridTextColumn Header="Discount(%)" Width="100" Binding="{Binding DiscPer}"/>
+                                            <DataGridTextColumn Header="Discount" Width="100" Binding="{Binding Discount}"/>
+                                            <!-- Hidden columns -->
+                                            <DataGridTextColumn Header="ItemId" Width="100" Visibility="Hidden" Binding="{Binding ItemId}"/>
+                                            <DataGridTextColumn Header="Rate" Width="100" Visibility="Hidden" Binding="{Binding UnitRate}"/>
+                                            <DataGridTextColumn Header="SupplierId" Visibility="Hidden" Binding="{Binding SupplierID}"/>
+                                            <DataGridTextColumn Header="PurchBillNo" Width="100" Visibility="Hidden" Binding="{Binding PurchBillNo}"/>
+                                            <DataGridTextColumn Header="Bqty" Width="100" Visibility="Hidden" Binding="{Binding BatchQty}"/>
+                                            <DataGridTextColumn Header="Stock" Width="100" Visibility="Hidden" Binding="{Binding StockQty}"/>
+
+                                            <DataGridTemplateColumn Header="Delete" Width="50">
+                                                <DataGridTemplateColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <Button ToolTip="Delete" Click="btnDelete_Click" Name="btnDelete" Padding="0" 
+                                                            Width="40" Height="25" BorderThickness="0" Style="{StaticResource GridDeleteButtonStyle}" 
+                                                            Cursor="Hand" Content="Delete"/>
+                                                    </DataTemplate>
+                                                </DataGridTemplateColumn.CellTemplate>
+                                            </DataGridTemplateColumn>
+                                        </DataGrid.Columns>
+
+                                        <DataGrid.RowStyle>
+                                            <Style TargetType="DataGridRow">
+                                                <Setter Property="Height" Value="22"/>
+                                                <Setter Property="FontSize" Value="12"/>
+                                                <Setter Property="Background" Value="White"/>
+                                                <Style.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter Property="Background" Value="#EAF7FA"/>
+                                                    </Trigger>
+                                                    <Trigger Property="IsSelected" Value="True">
+                                                        <Setter Property="Background" Value="#42bff5"/>
+                                                        <Setter Property="Foreground" Value="Black"/>
+                                                    </Trigger>
+
+                                                    <DataTrigger Binding="{Binding IsHigh}" Value="true">
+                                                        <Setter Property="Foreground" Value="Red" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding IsLook}" Value="true">
+                                                        <Setter Property="Foreground" Value="Orange" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding IsSound}" Value="true">
+                                                        <Setter Property="Foreground" Value="Orange" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </DataGrid.RowStyle>
+                                    </DataGrid>
+                                </WrapPanel>
+                            </Grid>
+                            </GroupBox>
+                        <GroupBox Header="Payment Details" Name="grpPayDet" Grid.Row="5" FontWeight="Bold" Margin="3" KeyboardNavigation.TabNavigation="Continue">
+                            <Grid Name="PaymentDet" KeyboardNavigation.TabNavigation="Continue">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                <WrapPanel Orientation="Horizontal" Grid.Row="0">
+                                    <StackPanel Orientation="Horizontal" Margin="3,2,3,2">
+                                        <Label Content="Total Amount" Width="90" IsTabStop="False"/>
+                                        <TextBox Name="txtTotalAmt" Width="100" IsEnabled="False" IsTabStop="False"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="3,2,3,2">
+                                        <Label Content="Discount" Width="80" IsTabStop="False"/>
+                                        <TextBox Name="txtDiscount" Width="100" IsEnabled="False" IsTabStop="False"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="3,2,3,2">
+                                        <Label Content="Paid Amount" Width="90" IsTabStop="False"/>
+                                        <TextBox Name="txtPaidAmt" Width="100" IsEnabled="False" IsTabStop="False"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="3,2,3,2">
+                                        <Label Content="Due Amount" Width="90" IsTabStop="False"/>
+                                        <TextBox Name="txtDueAmt" Width="100" IsEnabled="False" IsTabStop="False"
+                                             TextChanged="txtDueAmt_TextChanged"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="3,2,3,2">
+                                        <Label Content="Due Auth" Width="90" IsTabStop="False"/>
+                                        <ComboBox x:Name="cmbDueAuth" Height="20" FontSize="12"
+                                              Width="100" IsEnabled="False" IsTabStop="False"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="3,2,3,2">
+                                        <Label Content="Due Reason" Width="80" IsTabStop="False"/>
+                                        <TextBox Name="txtDueReason" Width="250" IsEnabled="False" IsTabStop="False"/>
+                                    </StackPanel>
+                                </WrapPanel>
+
+                                <WrapPanel Orientation="Horizontal" Grid.Row="1">
+                                    <StackPanel Orientation="Horizontal" Margin="3,2,3,2">
+                                        <Label Content="Discount Type" Width="90" IsTabStop="False"/>
+                                        <ComboBox x:Name="cmbDiscType" Height="20" FontSize="12" Width="100" TabIndex="10"
+                                              SelectionChanged="cmbDiscType_SelectionChanged">
+                                            <ComboBoxItem Content="--Select--"/>
+                                            <ComboBoxItem Content="Percentage"/>
+                                            <ComboBoxItem Content="Amount"/>
+                                        </ComboBox>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="3,2,3,2">
+                                        <Label Content="Percentage" Width="80" IsTabStop="False"/>
+                                        <TextBox Name="txtConcPer" Width="100" IsEnabled="False"
+                                             TabIndex="11" TextChanged="txtConcPer_TextChanged"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="3,2,3,2">
+                                        <Label Content="Current Disc" Width="90" IsTabStop="False"/>
+                                        <TextBox Name="txtConcAmt" Width="100" IsEnabled="False"
+                                             TabIndex="12" TextChanged="txtConcAmt_TextChanged"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="3,2,3,2">
+                                        <Label Content="Discount Auth" Width="90" IsTabStop="False"/>
+                                        <ComboBox x:Name="cmbDiscAuth" Height="20" FontSize="12"
+                                              Width="100" IsEnabled="False" TabIndex="13"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="3,2,3,2">
+                                        <Label Content="Disc Reason" Width="90" IsTabStop="False"/>
+                                        <TextBox Name="txtDiscReason" Width="250" IsEnabled="False" TabIndex="14"/>
+                                    </StackPanel>
+
+                                    <StackPanel Orientation="Horizontal" Margin="3,2,3,2">
+                                        <Label Content="RountOf-Type"  HorizontalAlignment="Left"  Width="90" />
+                                        <TextBox Name="txtRoundOFType" Margin="3" Width="100" TabIndex="8" IsEnabled="False" HorizontalAlignment="Left" ></TextBox>
+                                    </StackPanel>
+                                </WrapPanel>
+                                <StackPanel Orientation="Horizontal" Margin="3,2,3,2" Name="spPayDetails">
+                                    <WrapPanel Orientation="Horizontal" Grid.Row="2">
+                                        <StackPanel Orientation="Horizontal" Margin="3,2,3,2">
+                                            <Label Content="Pay Amount" Width="90" IsTabStop="False"/>
+                                            <TextBox Name="txtPayAmount" Width="100" TabIndex="15"
+                                             TextChanged="txtPayAmount_TextChanged"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" Margin="3,2,3,2">
+                                            <Label Content="Pay Mode" Width="80" IsTabStop="False"/>
+                                            <ComboBox x:Name="cmbPayMode" Height="20" FontSize="12" Width="100" TabIndex="16"
+                                              DropDownClosed="cmbPayMode_DropDownClosed"/>
+                                        </StackPanel>
+                                        <Label Content="Wallet Type" Width="90" Visibility="Collapsed" Name="lblWallet"   Margin="5,0,0,0" IsTabStop="False"/>
+                                        <ComboBox x:Name="cmbWalletType" Height="20" Margin="3,0,3,0" FontSize="12" Width="100"  Visibility="Collapsed" TabIndex="17"/>
+                                        <Label Content="Card No"      Width="90" Visibility="Collapsed" Name="lblCardNo"  Margin="5,0,0,0" IsTabStop="False"/>
+                                        <Label Content="Cheque No"    Width="90" Visibility="Collapsed" Name="lblCheqNo"  Margin="5,0,0,0" IsTabStop="False"/>
+                                        <Label Content="Reference No" Width="90" Visibility="Collapsed" Name="lblReferenceNo" Margin="5,0,0,0" IsTabStop="False"/>
+                                        <TextBox Name="txtRefNo" Margin="3,0,3,0" Width="100" Visibility="Collapsed" TabIndex="17"/>
+                                        <Label Content="Bank"         Width="90" Visibility="Collapsed" Name="lblBank"   Margin="5,0,0,0" IsTabStop="False"/>
+                                        <ComboBox x:Name="cmbBank" Height="20" Margin="3,0,3,0" FontSize="12" Width="100"       Visibility="Collapsed" TabIndex="18"/>
+                                        <Label Content="Cheque Dt."   Width="90" Visibility="Collapsed" Name="lblCheqDt" Margin="5,0,0,0" IsTabStop="False"/>
+                                        <DatePicker Margin="3,0,3,0" Name="dtpCheqDt" Width="120"                               Visibility="Collapsed" TabIndex="19"/>
+                                        <Button Name="btnPayAdd"   Content="Add"   Background="#4CAF50" Foreground="White"
+                                        Height="20" FontSize="12" FontWeight="Bold" BorderThickness="0" Cursor="Hand"
+                                        Margin="3,0,3,0" Width="70" TabIndex="20" Click="btnPayAdd_Click"/>
+                                        <Button Name="btnPayReset" Content="Reset" Background="Red"     Foreground="White"
+                                        Height="20" FontSize="12" FontWeight="Bold" BorderThickness="0" Cursor="Hand"
+                                        Margin="3,0,3,0" Width="70" IsTabStop="False" Click="btnPayReset_Click"/>
+                                        <Button Name="btnCalc"     Content="Calc"  Background="#4CAF50" Foreground="White"
+                                        Height="20" FontSize="12" FontWeight="Bold" BorderThickness="0" Cursor="Hand"
+                                        Margin="3,0,3,0" Width="70" IsTabStop="False" Click="btnCalc_Click"/>
+                                    </WrapPanel>
+
+                                    <DataGrid x:Name="dgvPaymentDet" Grid.Row="3" Height="90" Margin="3,0,3,0"
+                                      RenderOptions.ClearTypeHint="Enabled" AlternationCount="2"
+                                      IsReadOnly="True" ScrollViewer.CanContentScroll="True"
+                                      TextOptions.TextFormattingMode="Display" HeadersVisibility="All"
+                                      SelectionUnit="FullRow" ItemsSource="{Binding}"
+                                      AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False"
+                                      VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
+                                      IsTabStop="False"  ColumnHeaderStyle="{StaticResource GridHeaderStyle}" RowStyle="{StaticResource GridRowStyle}">
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Header="SlNo"           Width="50"  Binding="{Binding Slno}"/>
+                                            <DataGridTextColumn Header="Amount"         Width="*"   Binding="{Binding Amount}"/>
+                                            <DataGridTextColumn Header="Pay Mode"       Width="100" Binding="{Binding PayMode}"/>
+                                            <DataGridTextColumn Header="Wallet Type"    Width="100" Binding="{Binding WalletAccount}"/>
+                                            <DataGridTextColumn Header="Reference No"   Width="120" Binding="{Binding TransNo}"/>
+                                            <DataGridTextColumn Header="Reference Bank" Width="120" Binding="{Binding Bank}"/>
+                                            <DataGridTextColumn Header="Reference Date" Width="120" Binding="{Binding RefDt}"/>
+                                            <DataGridTemplateColumn Header="Delete"     Width="60">
+                                                <DataGridTemplateColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <Button ToolTip="Delete" Click="btnPayDelete_Click" Name="btnPayDelete"
+                                                    Padding="0" Width="45" Height="25" BorderThickness="0"
+                                                    Cursor="Hand" Content="Delete"
+                                                   Style="{StaticResource GridDeleteButtonStyle}"/>
+                                                    </DataTemplate>
+                                                </DataGridTemplateColumn.CellTemplate>
+                                            </DataGridTemplateColumn>
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                </StackPanel>
+                            </Grid>
+                        </GroupBox>
+                        <StackPanel Orientation="Horizontal" Grid.Row="6" Margin="10" KeyboardNavigation.TabNavigation="Continue">
+                            <Label Content="Transaction Code" Width="120" FontWeight="Bold"
+                           VerticalAlignment="Center" IsTabStop="False"/>
+                            <TextBox Name="txtTrnsCode" Height="22" Width="110"
+                             VerticalAlignment="Center" TabIndex="23"/>
+                            <Button Name="btnSave" Content="Save" Background="#4CAF50"
+                            Foreground="White" Height="22" FontSize="12" FontWeight="Bold"
+                            BorderThickness="0" Cursor="Hand" Margin="8,0,0,0" Width="75"
+                            TabIndex="24" VerticalAlignment="Center" Click="btnSave_Click"/>
+                            <Button Name="btnReset" Content="Reset" Background="Red"
+                            Foreground="White" Height="22" FontSize="12" FontWeight="Bold"
+                            BorderThickness="0" Cursor="Hand" Margin="8,0,0,0" Width="75"
+                            TabIndex="25" VerticalAlignment="Center" Click="btnReset_Click"/>
+                        </StackPanel> 
+                    </StackPanel>
+                    </ScrollViewer>
+                    
+                    <Popup Name="UHIDPopUp" Placement="MousePoint" IsOpen="False" Height="400" Width="850" Visibility="Collapsed" >
+                        <Border  BorderBrush="Black" BorderThickness="1" Padding="10" Background="White">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <StackPanel Orientation="Horizontal" Grid.Row="1">
+                                    <Label Content="From Dt." Margin="3"  Width="70" />
+                                    <DatePicker Margin="3" Name="dtpUHIDFrom" Width="150" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                                    <Label Content="To Dt." Margin="3" Width="50" HorizontalAlignment="Right" />
+                                    <DatePicker Margin="3"  Name="dtpUHIDTo" Width="150"  HorizontalAlignment="Left" />
+                                    <TextBox Name="txtSearch" Margin="3"  Width="200"  HorizontalAlignment="Left"   ></TextBox>
+
+                                    <Button x:Name="btnUHIDGo" Content="Go" Background="#1EAAC7" Foreground="White" Height="25" Width="50" FontSize="12"
+                                    FontWeight="Bold" BorderThickness="0" Cursor="Hand" Margin="3" TabIndex="1" Click="btnUHIDGo_Click" HorizontalAlignment="Left"></Button>
+                                </StackPanel>
+
+                                <DataGrid x:Name="dgvPatientDetails"   Height="300"  Margin="3" Grid.Row="2"
+                      RenderOptions.ClearTypeHint="Enabled"  AlternationCount="2" IsReadOnly="True" ScrollViewer.CanContentScroll="True"
+                  TextOptions.TextFormattingMode="Display" HeadersVisibility="All" SelectionUnit="FullRow" ItemsSource="{Binding}" 
+                      AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" 
+                                  IsTabStop="False" ColumnHeaderStyle="{StaticResource GridHeaderStyle}" RowStyle="{StaticResource GridRowStyle}">
+                                 
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="SLNO" Width="50" Binding="{Binding Slno}"/>
+                                        <DataGridTextColumn Header="UHID" Width="150" Binding="{Binding UHID}"/>
+                                        <DataGridTextColumn Header="IPDNo" Width="150" Binding="{Binding IPDNo}"/>
+                                        <DataGridTextColumn Header="Admission Dt" Width="100"  Binding="{Binding AdmDate, StringFormat=dd-MMM-yyyy}" />
+                                        <DataGridTextColumn Header="Name" Width="200" Binding="{Binding Name}"/>
+                                        <DataGridTextColumn Header="Phone" Width="100" Binding="{Binding Phone}"/>
+                                        <DataGridTextColumn Header="Consultant" Width="150" Binding="{Binding DocName}"/>
+                                        <DataGridTextColumn Header="Payer" Width="100" Binding="{Binding PayerType}"/>
+                                        <DataGridTextColumn Header="DocId" Width="100" Binding="{Binding DocId}" Visibility="Hidden"/>
+                                       
+                                        <DataGridTemplateColumn Header="View" Width="50">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Button ToolTip="View" Click="btnUHIDView_Click" Name="btnUHIDView" 
+                                             Cursor="Hand" Content="View" Style="{StaticResource GridViewButtonStyle}"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                    </DataGrid.Columns>
+
+
+                                </DataGrid>
+                                <Button Name="btnPOPCalc" Content="Close" Background="#C73234" Foreground="White" Height="20" FontSize="12"
+                                    FontWeight="Bold" BorderThickness="0" Cursor="Hand" Margin="3"    Width="70"
+                                  TabIndex="16" Click="btnPOPCalc_Click" HorizontalAlignment="Right"></Button>
+                            </Grid>
+                        </Border>
+                    </Popup>
+
+                    <Popup Name="IndentPopUp" Placement="MousePoint" IsOpen="False" Height="400" Width="1000" Visibility="Collapsed" >
+                        <Border  BorderBrush="Black" BorderThickness="1" Padding="10" Background="White">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <StackPanel Orientation="Horizontal" Grid.Row="1">
+
+                                    <StackPanel Orientation="Vertical" Width="160">
+                                        <Label Content="Nursing Station"  HorizontalAlignment="Left" />
+                                        <ComboBox Name="cmbNursingstation" SelectionChanged="cmbNursingstation_SelectionChanged" Height="20" FontSize="12"  Width="150" HorizontalAlignment="Left"  
+                                       TabIndex="7"  IsEditable="True" IsTextSearchEnabled="False" StaysOpenOnEdit="True" />
+                                    </StackPanel>
+                                    <StackPanel Orientation="Vertical" Width="160">
+                                        <Label Content="Ward"  HorizontalAlignment="Left" />
+                                        <ComboBox Name="cmbWard" SelectionChanged="cmbWard_SelectionChanged" Height="20" FontSize="12"  Width="150" HorizontalAlignment="Left"  
+                                       TabIndex="7"  IsEditable="True" IsTextSearchEnabled="False" StaysOpenOnEdit="True" />
+                                    </StackPanel>
+                                    <StackPanel Orientation="Vertical" Width="160">
+                                        <Label Content="Rooms"  HorizontalAlignment="Left" />
+                                        <ComboBox Name="cmbRooms" Height="20" FontSize="12"  Width="150" HorizontalAlignment="Left"  
+                                       TabIndex="7"   IsEditable="True" IsTextSearchEnabled="False" StaysOpenOnEdit="True" >
+
+                                        </ComboBox>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Vertical" Width="160">
+                                        <Label Content="Type"  HorizontalAlignment="Left" />
+                                        <ComboBox Name="cmbType" Height="20" FontSize="12"  Width="150" HorizontalAlignment="Left"  
+                                       TabIndex="7"  IsEditable="True" IsTextSearchEnabled="False" StaysOpenOnEdit="True" />
+                                    </StackPanel>
+                                    <StackPanel Orientation="Vertical" Width="160">
+                                        <Label Content="Indent Search"  HorizontalAlignment="Left" />
+                                        <TextBox Name="txtIndentSearch" Margin="3"  Width="200"  HorizontalAlignment="Left"   ></TextBox>
+
+                                    </StackPanel>
+                                    <StackPanel Orientation="Vertical" Width="160">
+                                        <Label Content=""  HorizontalAlignment="Left" />
+                                        <Button x:Name="btnIndentGo" Content="Go" Background="#1EAAC7" Foreground="White" Height="25" Width="50" FontSize="12"
+                FontWeight="Bold" BorderThickness="0" Cursor="Hand" Margin="3" 
+              TabIndex="1" Click="btnIndentGo_Click" HorizontalAlignment="Left"></Button>
+                                    </StackPanel>
+                                </StackPanel>
+
+                            <DataGrid x:Name="dgvIndentDetails"   Height="500"   Margin="3" Grid.Row="2"
+                      RenderOptions.ClearTypeHint="Enabled"  AlternationCount="2" IsReadOnly="True" ScrollViewer.CanContentScroll="True"
+                  TextOptions.TextFormattingMode="Display" HeadersVisibility="All"  SelectionUnit="FullRow" ItemsSource="{Binding}" 
+                      AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" IsTabStop="False" ColumnHeaderStyle="{StaticResource GridHeaderStyle}" RowStyle="{StaticResource GridRowStyle}">
+                                <DataGrid.Columns>
+                                        <DataGridTextColumn Header="SLNO" Width="50" Binding="{Binding Slno}"/>
+                                        <DataGridTextColumn Header="Indent No" Width="150" Binding="{Binding IndentNo}"/>
+                                        <DataGridTextColumn Header="Indent Date" Width="150" Binding="{Binding IndentDate, StringFormat=dd-MMM-yyyy}"/>
+                                        <DataGridTextColumn Header="IP No" Width="100"  Binding="{Binding OPIPDNo}" />
+                                        <DataGridTextColumn Header="Name" Width="200" Binding="{Binding Name}"/>
+                                        <DataGridTextColumn Header="Consultant" Width="100" Binding="{Binding DocName}"/>
+                                        <DataGridTextColumn Header="Bed/Room" Width="150" Binding="{Binding RoomNo}"/>
+                                        <DataGridTextColumn Header="Nursing Station" Width="100" Binding="{Binding NursingStationName}"/>
+                                        <DataGridTextColumn Header="Department" Width="100" Binding="{Binding DepartmentName}"/>
+                                        <DataGridTextColumn Header="Status" Width="100" Binding="{Binding IssueStatus}"/>
+                                       
+                                        <DataGridTemplateColumn Header="View" Width="50">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Button ToolTip="View" Click="btnIndentView_Click" Name="btnIndentView" 
+                             Cursor="Hand" Content="View" Style="{StaticResource GridViewButtonStyle}"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                                <Button Name="btnPOPIndent" Content="Close" Background="#C73234" Foreground="White" Height="20" FontSize="12"
+                                    FontWeight="Bold" BorderThickness="0" Cursor="Hand" Margin="3"    Width="70"
+                                  TabIndex="16" Click="btnPOPIndent_Click" HorizontalAlignment="Right"></Button>
+                            </Grid>
+
+                        </Border>
+                    </Popup>
+
+                </Grid>
+            </Border>
+        </Grid>
+</UserControl>
+
